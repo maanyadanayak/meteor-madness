@@ -5,7 +5,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Target, Zap, AlertTriangle, Play, RotateCcw } from "lucide-react";
+import { MapPin, Target, Zap, AlertTriangle, Play, RotateCcw, Flame } from "lucide-react";
+
+interface MeteorData {
+  id: number;
+  name: string;
+  size: number;
+  speed: number;
+  angle: number;
+  impactTime: string;
+  damage: string;
+}
 
 const ImpactExplorer = () => {
   const [city, setCity] = useState("");
@@ -13,12 +23,47 @@ const ImpactExplorer = () => {
   const [meteorSpeed, setMeteorSpeed] = useState([20]);
   const [meteorAngle, setMeteorAngle] = useState([45]);
   const [simulationActive, setSimulationActive] = useState(false);
+  const [meteorList, setMeteorList] = useState<MeteorData[]>([]);
   
   const handleSimulation = () => {
     if (city.trim()) {
       setSimulationActive(true);
-      // Mock simulation - in real app this would trigger map visualization
-      setTimeout(() => setSimulationActive(false), 3000);
+      
+      // Generate placeholder meteor data based on parameters
+      setTimeout(() => {
+        const mockMeteors: MeteorData[] = [
+          {
+            id: 1,
+            name: `Meteor Alpha`,
+            size: meteorSize[0],
+            speed: meteorSpeed[0],
+            angle: meteorAngle[0],
+            impactTime: new Date().toLocaleTimeString(),
+            damage: meteorSize[0] > 100 ? "Critical" : meteorSize[0] > 50 ? "High" : "Moderate"
+          },
+          {
+            id: 2,
+            name: `Meteor Beta`,
+            size: Math.floor(meteorSize[0] * 0.7),
+            speed: meteorSpeed[0] + 5,
+            angle: meteorAngle[0] - 10,
+            impactTime: new Date(Date.now() + 120000).toLocaleTimeString(),
+            damage: meteorSize[0] > 80 ? "High" : "Moderate"
+          },
+          {
+            id: 3,
+            name: `Meteor Gamma`,
+            size: Math.floor(meteorSize[0] * 0.5),
+            speed: meteorSpeed[0] - 3,
+            angle: meteorAngle[0] + 15,
+            impactTime: new Date(Date.now() + 240000).toLocaleTimeString(),
+            damage: "Moderate"
+          }
+        ];
+        
+        setMeteorList(mockMeteors);
+        setSimulationActive(false);
+      }, 2000);
     }
   };
   
@@ -28,6 +73,7 @@ const ImpactExplorer = () => {
     setMeteorSpeed([20]);
     setMeteorAngle([45]);
     setSimulationActive(false);
+    setMeteorList([]);
   };
   
   return (
@@ -170,61 +216,69 @@ const ImpactExplorer = () => {
             </CardContent>
           </Card>
           
-          {/* Map Visualization */}
-          <Card className="cosmic-border bg-card/90 backdrop-blur-sm h-[600px]">
+          {/* Meteor Impact Results */}
+          <Card className="cosmic-border bg-card/90 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-2xl">
-                <MapPin className="h-8 w-8 text-neon-green" />
-                Impact Visualization
+                <Flame className="h-8 w-8 text-neon-orange" />
+                Meteor Impact Results
               </CardTitle>
+              <CardDescription className="text-lg">
+                {city ? `Meteors detected near ${city}` : "Run simulation to see results"}
+              </CardDescription>
             </CardHeader>
-            <CardContent className="h-full">
-              <div className="relative w-full h-full bg-gradient-space rounded-lg overflow-hidden flex items-center justify-center">
-                {simulationActive && (
-                  <div className="absolute inset-0 starfield opacity-40"></div>
-                )}
-                
-                {!city.trim() ? (
-                  <div className="text-center text-muted-foreground">
-                    <MapPin className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg">Enter a city name to begin simulation</p>
-                  </div>
-                ) : simulationActive ? (
-                  <div className="text-center animate-pulse">
-                    <div className="relative">
-                      <div className="w-32 h-32 rounded-full bg-gradient-cosmic mx-auto mb-6 animate-pulse-neon"></div>
-                      <AlertTriangle className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-16 w-16 text-background" />
-                    </div>
-                    <p className="text-2xl font-bold gradient-text mb-2">Impact Detected!</p>
-                    <p className="text-lg text-foreground/80">
-                      Simulating {meteorSize[0]}m meteor at {meteorSpeed[0]} km/s
-                    </p>
-                    <p className="text-muted-foreground">Target: {city}</p>
-                  </div>
-                ) : (
-                  <div className="text-center">
-                    <div className="w-24 h-24 rounded-full bg-primary/20 mx-auto mb-4 flex items-center justify-center">
-                      <Target className="h-12 w-12 text-primary" />
-                    </div>
-                    <p className="text-xl font-semibold mb-2">Ready to Simulate</p>
-                    <p className="text-muted-foreground">Target: {city}</p>
-                    <div className="mt-6 grid grid-cols-3 gap-4 text-sm">
-                      <div className="text-center">
-                        <div className="font-semibold text-primary">{meteorSize[0]}m</div>
-                        <div className="text-muted-foreground">Size</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="font-semibold text-neon-cyan">{meteorSpeed[0]} km/s</div>
-                        <div className="text-muted-foreground">Speed</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="font-semibold text-accent">{meteorAngle[0]}°</div>
-                        <div className="text-muted-foreground">Angle</div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+            <CardContent>
+              {!meteorList.length && !simulationActive && (
+                <div className="text-center py-12 text-muted-foreground">
+                  <Target className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg">Enter a location and run the simulation to see meteor impacts</p>
+                </div>
+              )}
+              
+              {simulationActive && (
+                <div className="text-center py-12">
+                  <Zap className="h-16 w-16 mx-auto mb-4 text-primary animate-pulse" />
+                  <p className="text-xl font-semibold gradient-text">Calculating meteor trajectories...</p>
+                </div>
+              )}
+              
+              {meteorList.length > 0 && !simulationActive && (
+                <div className="space-y-4">
+                  {meteorList.map((meteor) => (
+                    <Card key={meteor.id} className="bg-background/50 border-primary/20">
+                      <CardContent className="pt-6">
+                        <div className="flex items-start justify-between mb-4">
+                          <div>
+                            <h3 className="text-xl font-bold text-primary">{meteor.name}</h3>
+                            <p className="text-sm text-muted-foreground">Impact Time: {meteor.impactTime}</p>
+                          </div>
+                          <Badge 
+                            variant={meteor.damage === "Critical" ? "destructive" : "outline"}
+                            className="text-base"
+                          >
+                            {meteor.damage}
+                          </Badge>
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-4">
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-1">Size</p>
+                            <p className="text-lg font-semibold text-primary">{meteor.size}m</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-1">Speed</p>
+                            <p className="text-lg font-semibold text-neon-cyan">{meteor.speed} km/s</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-1">Angle</p>
+                            <p className="text-lg font-semibold text-accent">{meteor.angle}°</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
