@@ -14,10 +14,116 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      meteor_impacts: {
+        Row: {
+          created_at: string | null
+          damage_assessment: string | null
+          details: string | null
+          id: string
+          image_url: string | null
+          impact_angle: number
+          impact_date: string
+          impact_force: number | null
+          latitude: number
+          location_name: string
+          longitude: number
+          name: string
+          size: number
+          speed: number
+          state: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          damage_assessment?: string | null
+          details?: string | null
+          id?: string
+          image_url?: string | null
+          impact_angle: number
+          impact_date: string
+          impact_force?: number | null
+          latitude: number
+          location_name: string
+          longitude: number
+          name: string
+          size: number
+          speed: number
+          state?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          damage_assessment?: string | null
+          details?: string | null
+          id?: string
+          image_url?: string | null
+          impact_angle?: number
+          impact_date?: string
+          impact_force?: number | null
+          latitude?: number
+          location_name?: string
+          longitude?: number
+          name?: string
+          size?: number
+          speed?: number
+          state?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      recent_meteor_impacts: {
+        Row: {
+          created_at: string | null
+          damage_assessment: string | null
+          details: string | null
+          id: string | null
+          image_url: string | null
+          impact_angle: number | null
+          impact_date: string | null
+          impact_force: number | null
+          latitude: number | null
+          location_name: string | null
+          longitude: number | null
+          name: string | null
+          size: number | null
+          speed: number | null
+          state: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          damage_assessment?: string | null
+          details?: string | null
+          id?: string | null
+          image_url?: string | null
+          impact_angle?: number | null
+          impact_date?: string | null
+          impact_force?: number | null
+          latitude?: number | null
+          location_name?: string | null
+          longitude?: number | null
+          name?: string | null
+          size?: number | null
+          speed?: number | null
+          state?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          damage_assessment?: string | null
+          details?: string | null
+          id?: string | null
+          image_url?: string | null
+          impact_angle?: number | null
+          impact_date?: string | null
+          impact_force?: number | null
+          latitude?: number | null
+          location_name?: string | null
+          longitude?: number | null
+          name?: string | null
+          size?: number | null
+          speed?: number | null
+          state?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
